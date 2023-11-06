@@ -36,11 +36,6 @@ public class MainActivity extends AppCompatActivity {
         EditText email = findViewById(R.id.email);
         EditText telf = findViewById(R.id.tel);
         Button create = findViewById(R.id.button);
-        String fDir = getFilesDir().getPath();
-        File filesPath = new File(fDir);
-        Toast notifier = new Toast(this.getApplicationContext());
-        notifier.setDuration(Toast.LENGTH_LONG);
-        notifier.setText("1");
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    notifier.setText(filesPath.getPath()); notifier.show();}
+                }
             }
         });
 
