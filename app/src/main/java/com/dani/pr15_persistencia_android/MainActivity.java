@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.time.Duration;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
         EditText name = findViewById(R.id.name);
         EditText cognom = findViewById(R.id.cognom);
         EditText email = findViewById(R.id.email);
+        EditText telf = findViewById(R.id.tel);
         Button create = findViewById(R.id.button);
-        File filesPath = getFilesDir();
+        String fDir = getFilesDir().getPath();
+        File filesPath = new File(fDir);
         Toast notifier = new Toast(this.getApplicationContext());
         notifier.setDuration(Toast.LENGTH_LONG);
         notifier.setText("1");
@@ -43,41 +46,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder db = dbf.newDocumentBuilder();
-                    Document doc = db.newDocument();
-                    //Cada contacto
-                    Element elmRoot = doc.createElement("contacte");
-                    doc.appendChild(elmRoot);
-                    //Name
-                    Element elmName = doc.createElement("name");
-                    Text tName = doc.createTextNode(name.getText().toString());
-                    elmName.appendChild(tName);
-                    elmRoot.appendChild(elmName);
-                    //Cognom
-                    Element elmCog = doc.createElement("cognom");
-                    Text tCog = doc.createTextNode(cognom.getText().toString());
-                    elmCog.appendChild(tCog);
-                    elmRoot.appendChild(elmCog);
-                    //Email
-                    Element elmMail = doc.createElement("email");
-                    Text tMail = doc.createTextNode(email.getText().toString());
-                    elmMail.appendChild(tMail);
-                    elmRoot.appendChild(elmMail);
+                    FileOutputStream fo =  openFileOutput("data.txt", MODE_APPEND);
+                    String text = name.getText()+";"+cognom.getText()+";"+telf.getText()+";"+email.getText()+";\n";
+                    fo.write(text.getBytes());
+                    fo.close();
 
-                    //Fer el document
-                    TransformerFactory tF = TransformerFactory.newInstance();
-                    Transformer trans = tF.newTransformer();
-                    trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-                    trans.setOutputProperty(OutputKeys.INDENT, "yes");
-                    DOMSource source = new DOMSource(doc);
-                    StreamResult result = new StreamResult(filesPath);
-
-                    trans.transform(source, result);
-                    notifier.setText("Done");
-                    notifier.show();
-
-                } catch (Exception e) { notifier.setText(e.getMessage()); notifier.show();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    notifier.setText(filesPath.getPath()); notifier.show();}
             }
         });
 
